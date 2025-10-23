@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Resume Bandit API</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-brain"></i> Personalized Resume Bandit</h1>
+                <p>AI-driven personalized coding question generation with online learning</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Profile Form -->
+            <section class="form-section">
+                <div class="form-container">
+                    <h2><i class="fas fa-user-edit"></i> Candidate Profile</h2>
+                    <form id="profileForm" class="profile-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="education">Education Level *</label>
+                                <select id="education" name="education" required>
+                                    <option value="">Select Education</option>
+                                    <option value="Diploma">Diploma</option>
+                                    <option value="Bachelor">Bachelor</option>
+                                    <option value="Master">Master</option>
+                                    <option value="PhD">PhD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="experience">Years of Experience *</label>
+                                <input type="number" id="experience" name="experience" min="0" max="50" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="projectCount">Project Count *</label>
+                                <input type="number" id="projectCount" name="projectCount" min="0" max="100" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="domain">Domain *</label>
+                                <select id="domain" name="domain" required>
+                                    <option value="">Select Domain</option>
+                                    <option value="Web Development">Web Development</option>
+                                    <option value="Mobile Development">Mobile Development</option>
+                                    <option value="AI/ML">AI/ML</option>
+                                    <option value="Data Science">Data Science</option>
+                                    <option value="Cloud Computing">Cloud Computing</option>
+                                    <option value="DevOps">DevOps</option>
+                                    <option value="Cybersecurity">Cybersecurity</option>
+                                    <option value="Game Development">Game Development</option>
+                                    <option value="Embedded Systems">Embedded Systems</option>
+                                    <option value="Blockchain">Blockchain</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="skillLevel">Skill Level *</label>
+                                <select id="skillLevel" name="skillLevel" required>
+                                    <option value="">Select Skill Level</option>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="skills">Skills (comma-separated) *</label>
+                            <input type="text" id="skills" name="skills" placeholder="e.g., Python, JavaScript, React, Node.js" required>
+                            <small>Enter skills separated by commas</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="certifications">Certifications</label>
+                            <input type="text" id="certifications" name="certifications" placeholder="e.g., AWS Certified, Google Cloud Professional">
+                            <small>Leave empty or enter "None" if no certifications</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fatigue">Fatigue Level</label>
+                            <select id="fatigue" name="fatigue">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-magic"></i> Generate Personalized Question
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-container">
+                    <h2><i class="fas fa-lightbulb"></i> Generated Question</h2>
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="candidate-info">
+                                <h3 id="candidateName"></h3>
+                                <div class="prediction-info">
+                                    <span class="predicted-type">
+                                        <i class="fas fa-robot"></i> Predicted: <span id="predictedType"></span>
+                                    </span>
+                                    <span class="bandit-type">
+                                        <i class="fas fa-dice"></i> Selected: <span id="banditType"></span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="reward-info">
+                                <div class="reward-score">
+                                    <i class="fas fa-star"></i> Reward: <span id="rewardScore"></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-content">
+                            <h4>Your Personalized Question:</h4>
+                            <div class="question-text" id="questionText"></div>
+                        </div>
+
+                        <div class="rationale-section">
+                            <h4><i class="fas fa-info-circle"></i> Why this question was selected:</h4>
+                            <ul id="rationaleList"></ul>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn-secondary" onclick="generateNewQuestion()">
+                                <i class="fas fa-refresh"></i> Generate Another Question
+                            </button>
+                            <button class="btn-primary" onclick="copyQuestion()">
+                                <i class="fas fa-copy"></i> Copy Question
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Generating your personalized question...</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Personalized Resume Bandit API. Built with FastAPI and AI.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
